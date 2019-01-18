@@ -16,6 +16,16 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+
+
+		<!-- Create file with maven properties to pass to deploy.sh -->
+		<!--<write-file-version>1.1</write-file-version>-->
+		<!--<jar-file>${project.artifactId}-${project.version}.jar</jar-file>-->
+		<docker-server>pinfraprje8:5000</docker-server>
+		<!-- Docker properties -->
+		<dockerfile-maven-plugin.version>1.4.3</dockerfile-maven-plugin.version>
+		<docker.skip>true</docker.skip>
+
 	</properties>
 
 	<dependencies>
@@ -39,7 +49,71 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${dockerfile-maven-plugin.version}</version>
+				<configuration>
+					<repository>smf-service</repository>
+					<tag>${project.version}</tag>
+					<contextDirectory>target/</contextDirectory>
+					<skip>${docker.skip}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker-build</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Create Dockerfile, docker-compose.yml & deploy.sh -->
+			<!--<plugin>-->
+				<!--<groupId>ru.yaal.maven</groupId>-->
+				<!--<artifactId>write-text-files-maven-plugin</artifactId>-->
+				<!--<version>${write-file-version}</version>-->
+				<!--<configuration>-->
+					<!--<charset>UTF-8</charset>-->
+					<!--<files>-->
+						<!--<file>-->
+							<!--<path>target/maven-properties</path>-->
+							<!--<lines>-->
+								<!--<line>projectName=${project.name}</line>-->
+								<!--<line>projectArtifact=${project.artifactId}</line>-->
+								<!--<line>projectVersion=${project.version}</line>-->
+								<!--<line>jarFile=${jar-file}</line>-->
+								<!--<line>dockerServer=${docker-server}</line>-->
+							<!--</lines>-->
+						<!--</file>-->
+					<!--</files>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>write-text-files</id>-->
+						<!--<phase>test</phase>-->
+						<!--<goals>-->
+							<!--<goal>write-text-files</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
+
 		</plugins>
 	</build>
+
+	<!--<distributionManagement>-->
+		<!--<repository>-->
+			<!--<id>internal.repo</id>-->
+			<!--<name>Internal repo</name>-->
+			<!--<url>file:///home/thara/testesb/in</url>-->
+		<!--</repository>-->
+	<!--</distributionManagement>-->
+
+	<!-- Docker plugin -->
+
 
 </project>
