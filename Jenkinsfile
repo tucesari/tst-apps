@@ -30,6 +30,8 @@ pipeline {
 //        }
 
          stage('Build Docker image') {
+          steps {
+
                     sh 'docker stop demo'
                     sh 'docker rm demo'
                     sh 'docker build -t demoImage E:\smf\demo'
